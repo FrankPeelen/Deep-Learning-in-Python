@@ -85,14 +85,6 @@ def main():
 	w1 = init_const * np.random.randn(n + 1,layer1_size)
 	w2 = init_const * np.random.randn(layer1_size + 1,layer2_size)
 
-	# Do forward pass and compute class scores.
-	x = np.insert(x_test, 0, 1, axis=1) # Adding a bias
-	x = nodes_forward(x,w1)
-	x = relu_forward(x)
-	x = np.insert(x, 0, 1, axis=1) # Adding a bias
-	scores = nodes_forward(x,w2)
-
-
 	# Assign the NN a loss function, so it can determine it's error.
 	# loss = svm_loss(scores, y_test)
 
@@ -101,6 +93,7 @@ def main():
 	# Tweak & tune the NN and it's hyperparameters on a validation set.
 
 	# Test it's performance on the test set for a final result.
+	scores = predict(x_test, [w1, w2])
 	print(accuracy(scores, y_test))
 
 
@@ -144,6 +137,18 @@ def svm_loss(scores, y):
 	np.maximum()
 	return np.maximum(+ 1, 0)
 
+# Calculates the scores given input x into a neural network consisting of layers with weights w,
+# and ReLu layers after each layer, except for the final layer.
+# w has to be a list weights.
+def predict(x, w):
+	for i in xrange(len(w) - 1):
+		x = np.insert(x, 0, 1, axis=1) # Adding the bias
+		x = nodes_forward(x,w[i])
+		x = relu_forward(x)
+	x = np.insert(x, 0, 1, axis=1) # Adding the bias
+	return nodes_forward(x,w[len(w) - 1])
+
+# Calculates the accuracy of scores measured against labels y.
 def accuracy(scores, y):
 	predictions = np.argmax(scores, axis=1)
 	num_correct_preds = np.sum(y == predictions)
