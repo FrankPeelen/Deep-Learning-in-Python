@@ -38,7 +38,7 @@ def main():
 	print(x_train.shape, y_train.shape, x_test.shape, y_test.shape)
 	Result: ((50000, 3072), (50000,), (10000, 3072), (10000,))
 	"""
-	m = x_train.shape[0] # Number of training examples
+	m = x_train.shape[0] # Number of training examples.
 	n = x_train.shape[1] # Number of features
 
 	"""
@@ -85,10 +85,23 @@ def main():
 	w1 = init_const * np.random.randn(n + 1,layer1_size)
 	w2 = init_const * np.random.randn(layer1_size + 1,layer2_size)
 
-	# Assign the NN a loss function, so it can determine it's error.
-	# loss = svm_loss(scores, y_test)
+	# Create a training loop with a certain batch size and chose for how many epochs you want to train
+	batch_size_const = 100 # I chose a batch size of 100.
+	num_epochs = 5 # I chose to go through all training examples 5 times
 
-	# Create an optimization algorithm, so the NN can reduce it's error and learn.
+	while (num_epochs > 0):
+		examples_left = m - batch_size_const # Minus batch_size, because we have to be able to pick a new batch without running out of examples.
+		while (examples_left >= 0):
+			print(examples_left, m - examples_left - batch_size_const, m - examples_left)
+			batch = x_train[m - examples_left - batch_size_const : m - examples_left, :]
+			examples_left = -1#-batch_size_const
+		num_epochs += -1
+
+
+	# Create a loss function, so that the NN can determine it's error
+
+	# Choose a optimization algorithm
+
 
 	# Tweak & tune the NN and it's hyperparameters on a validation set.
 
